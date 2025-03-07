@@ -2,5 +2,6 @@
     <qresource prefix="/image">
         <file>login.png</file>
         <file>register.png</file>
+        <file>vecteezy_male-and-female-symbol-human-profile-icon-or-people-icon_3543440.jpg</file>
     </qresource>
 </RCC>

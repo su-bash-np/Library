@@ -1,18 +1,25 @@
 #include "admin.h"
 #include "ui_admin.h"
 #include "database.h"
+#include "sessionmanager.h"
+#include "login.h"
 
 #include<QMessageBox>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QTableWidgetItem>
 #include<QDebug>
+#include <QDate>
 
 Admin::Admin(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Admin)
 {
     ui->setupUi(this);
+
+    // Automatically open and refrace the view  section
+    ui->stackedWidget->setCurrentIndex(0);
+    on_ViewpushButton_clicked();
 }
 
 Admin::~Admin()
@@ -54,17 +61,12 @@ void Admin::viewBookList(){
     ui->bookTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
 }
-void Admin::on_StatuspushButton_clicked()
+
+
+void Admin::on_AddBook_clicked()
 {
-    ui->stackedWidget->setCurrentIndex(2);
+    ui->stackedWidget->setCurrentIndex(4);
 }
-
-
-void Admin::on_SearchpushButton_clicked()
-{
-    ui->stackedWidget->setCurrentIndex(5);
-}
-
 
 void Admin::on_Update_Delete_clicked()
 {
@@ -81,13 +83,15 @@ void Admin::on_ViewpushButton_clicked()
 
 void Admin::on_ReturnpushButton_clicked()
 {
-    ui->stackedWidget->setCurrentIndex(3);
+    ui->stackedWidget->setCurrentIndex(2);
 }
 
 
 void Admin::on_ProfilepushButton_clicked()
 {
-    ui->stackedWidget->setCurrentIndex(4);
+    ui->stackedWidget->setCurrentIndex(3);
+    ui->aName->setText(SessionManager::currentAdminName);
+    ui->aID->setText(SessionManager::currentAdminID_Card);
 }
 
 
@@ -127,11 +131,6 @@ void Admin::on_addBook_clicked()
 
 }
 
-
-void Admin::on_pushButton_6_clicked()
-{
-    ui->stackedWidget->setCurrentIndex(2);
-}
 
 void Admin::on_SearchPushButton_clicked()
 {
@@ -257,49 +256,70 @@ void Admin::on_deLete_clicked()
 
 void Admin::on_pushButton_5_clicked()
 {
-        QString bookID = ui->Re_bookid->text();
-        QString bookTitle = ui->Re_title->text();
-        QString isbn = ui->Re_isbn->text();
-        QString idCard = ui->Re_id->text();
+    QString bookID = ui->Re_bookid->text();
+    QString idCard = ui->Re_id->text();
 
-        if (bookID.isEmpty() || bookTitle.isEmpty() || isbn.isEmpty() || idCard.isEmpty()) {
-            QMessageBox::warning(this, "Input Error", "Please enter BookID, Title, ISBN, and ID-Card.");
-            return;
-        }
+    // Check for empty fields
+    if (bookID.isEmpty() || idCard.isEmpty()) {
+        QMessageBox::warning(this, "Input Error", "Please enter BookID, Title, and ID-Card.");
+        return;
+    }
 
-        QSqlQuery query;
-        query.prepare("SELECT DueDate FROM Transactions "
-                      "JOIN Books ON Transactions.BookID = Books.BookID "
-                      "WHERE Transactions.BookID = :bookID "
-                      "AND Transactions.id = :idCard "
-                      "AND Books.Title = :bookTitle "
-                      "AND Transactions.ReturnDate IS NULL");
+    // Query to get DueDate for the transaction
+    QSqlQuery query;
+    query.prepare("SELECT DueDate FROM Transactions "
+                  "JOIN Books ON Transactions.BookID = Books.BookID "
+                  "WHERE Transactions.BookID = :bookID "
+                  "AND Transactions.ReturnDate IS NULL");
 
-        query.bindValue(":bookID", bookID);
-        query.bindValue(":bookTitle", bookTitle);
-        query.bindValue(":idCard", idCard);
+    query.bindValue(":bookID", bookID);
+    query.bindValue(":idCard", idCard);
 
-        if (!query.exec() || !query.next()) {
-            QMessageBox::warning(this, "Return Error", "No active transaction found for this book with matching title.");
-            return;
-        }
+    if (!query.exec() || !query.next()) {
+        QMessageBox::warning(this, "Return Error", "No active transaction found for this book with matching title.");
+        return;
+    }
 
-        QDate dueDate = query.value("DueDate").toDate();
-        QDate today = QDate::currentDate();
-        int fineAmount = (today > dueDate) ? dueDate.daysTo(today) * 10 : 0; // 5rs per late day
+    // Get the due date and calculate fine
+    QDate dueDate = query.value("DueDate").toDate();
+    QDate today = QDate::currentDate();
+    int fineAmount = (today > dueDate) ? dueDate.daysTo(today) * 5 : 0; // ₹5 per late day
 
-        query.prepare("UPDATE Transactions SET ReturnDate = :returnDate, Fine = :fine "
-                      "WHERE BookID = :bookID AND id = :idCard AND ReturnDate IS NULL");
-        query.bindValue(":returnDate", today);
-        query.bindValue(":fine", fineAmount);
-        query.bindValue(":bookID", bookID);
-        query.bindValue(":idCard", idCard);
+    // Prepare to update the transaction with return date and fine
+    query.prepare("UPDATE Transactions SET ReturnDate = :returnDate, Fine = :fine "
+                  "WHERE BookID = :bookID AND id = :idCard AND ReturnDate IS NULL");
+    query.bindValue(":returnDate", today);
+    query.bindValue(":fine", fineAmount);
+    query.bindValue(":bookID", bookID);
+    query.bindValue(":idCard", idCard);
 
-        if (query.exec()) {
-            QMessageBox::information(this, "Success", QString("Book returned successfully! Fine: ₹%1").arg(fineAmount));
-        } else {
-            QMessageBox::critical(this, "Error", "Failed to update return details.");
+    if (query.exec()) {
+        // Update the Available books count after returning the book
+        QSqlQuery updateBookQuery;
+        updateBookQuery.prepare("UPDATE Books SET Available = Available + 1 WHERE BookID = :bookID");
+        updateBookQuery.bindValue(":bookID", bookID);
+        updateBookQuery.exec();
 
-        }
+        QMessageBox::information(this, "Success", QString("Book returned successfully! Fine: ₹%1").arg(fineAmount));
+    } else {
+        QMessageBox::critical(this, "Error", "Failed to update return details.");
+    }
 }
+
+
+
+void Admin::on_aExit_clicked()
+{
+
+    // Clear admin session data
+    SessionManager::currentAdminName= "";
+    SessionManager::currentAdminID_Card="";
+
+    // Show login window
+    Login *login_Page= new Login();
+    login_Page ->show();
+    this ->close();
+    // Close the current admin window
+}
+
 

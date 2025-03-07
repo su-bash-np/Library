@@ -2,6 +2,7 @@
 #include "./ui_login.h"
 
 #include"database.h"
+#include "sessionmanager.h"
 
 #include <QDebug>
 #include <QCryptographicHash>// For password hashing
@@ -95,7 +96,7 @@ void Login::on_login_clicked()
 
     // Prepare the query to check user credentials
     QSqlQuery query;
-    query.prepare("SELECT idcard FROM user WHERE idcard = :idcard AND password = :password AND role = :role");
+    query.prepare("SELECT id, idcard, name FROM user WHERE idcard = :idcard AND password = :password AND role = :role");
     query.bindValue(":idcard", idcard);
     query.bindValue(":password", hashedPassword);
     query.bindValue(":role", role);
@@ -106,8 +107,24 @@ void Login::on_login_clicked()
         return;
     }
 
+    // Check if the student exists and get the ID
     if (query.next()) {
-        // Login successful, open respective dashboard
+        QString user_id = query.value("id").toString();  // Fetch Student ID
+        QString user_Name = query.value("name").toString();  // Fetch Student Name
+        QString user_idCard = query.value("idcard").toString();  // Fetch Student ID-Card
+
+        // Store Student id,idcard,Name in the global session variable
+        if (role == "student") {
+            SessionManager::currentStudentID = user_id;
+            SessionManager::currentStudentName=user_Name;
+            SessionManager::currentStudentID_Card=user_idCard;
+        }
+        else if (role == "admin") {
+            SessionManager::currentAdminName=user_Name;
+            SessionManager::currentAdminID_Card=user_idCard;
+        }
+
+        // Login successful, open the respective dashboard
         if (role == "admin") {
             openAdmin();
         } else if (role == "student") {

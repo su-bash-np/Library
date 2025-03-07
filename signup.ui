@@ -121,6 +121,9 @@ border:none;}</string>
            <height>24</height>
           </rect>
          </property>
+         <property name="echoMode">
+          <enum>QLineEdit::Password</enum>
+         </property>
          <property name="placeholderText">
           <string>Password</string>
          </property>
@@ -143,6 +146,9 @@ border:none;}</string>
            <width>291</width>
            <height>24</height>
           </rect>
+         </property>
+         <property name="echoMode">
+          <enum>QLineEdit::Password</enum>
          </property>
          <property name="placeholderText">
           <string>Confirm Password</string>

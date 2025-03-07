@@ -2,6 +2,7 @@
 #define STUDENT_H
 
 #include <QWidget>
+#include <QPushButton>
 
 namespace Ui {
 class Student;
@@ -18,18 +19,22 @@ public:
 private slots:
     void on_ViewpushButton_clicked();
 
-    void on_SearchpushButton_clicked();
-
-    void on_GetpushButton_clicked();
-
-    void on_ReturnpushButton_clicked();
 
     void on_ProfilepushButton_clicked();
 
-    void on_pushButton_6_clicked();
+    void getBook(QString bookId);
 
-private:
+      void returnBook(QString bookId);
+
+
+    void on_SearchBookBtn_clicked();
+
+      void on_Exit_clicked();
+
+  private:
     Ui::Student *ui;
+   QPushButton *getBookBtn;
+   QPushButton *returnBookBtn;
 };
 
 #endif // STUDENT_H

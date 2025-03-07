@@ -92,30 +92,29 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="SearchpushButton">
-             <property name="text">
-              <string>SearchBook</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="GetpushButton">
-             <property name="text">
-              <string>GetBook</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="ReturnpushButton">
-             <property name="text">
-              <string>ReturnBook</string>
-             </property>
-            </widget>
-           </item>
-           <item>
             <widget class="QPushButton" name="ProfilepushButton">
              <property name="text">
               <string>Profile</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="Exit">
+             <property name="text">
+              <string>Exit</string>
              </property>
             </widget>
            </item>
@@ -128,7 +127,7 @@
      <item>
       <widget class="QStackedWidget" name="stackedWidget">
        <property name="currentIndex">
-        <number>0</number>
+        <number>4</number>
        </property>
        <widget class="QWidget" name="ViewBookS">
         <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -184,7 +183,7 @@
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="pushButton_6">
+                <widget class="QPushButton" name="SearchBookBtn">
                  <property name="text">
                   <string>Search</string>
                  </property>
@@ -454,7 +453,7 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QLineEdit" name="lineEdit_2">
+                <widget class="QLineEdit" name="bookIDlineEdit">
                  <property name="placeholderText">
                   <string>1001</string>
                  </property>
@@ -482,7 +481,7 @@
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QLineEdit" name="lineEdit_3">
+                <widget class="QLineEdit" name="titlelineEdit">
                  <property name="text">
                   <string/>
                  </property>
@@ -492,14 +491,14 @@
                 </widget>
                </item>
                <item row="2" column="1">
-                <widget class="QLineEdit" name="lineEdit_4">
+                <widget class="QLineEdit" name="isbnlineEdit">
                  <property name="placeholderText">
                   <string>98765432-01</string>
                  </property>
                 </widget>
                </item>
                <item row="3" column="1">
-                <widget class="QLineEdit" name="lineEdit_5">
+                <widget class="QLineEdit" name="autherlineEdit">
                  <property name="placeholderText">
                   <string>Balmaki</string>
                  </property>
@@ -784,61 +783,138 @@
            <property name="frameShadow">
             <enum>QFrame::Raised</enum>
            </property>
-           <layout class="QFormLayout" name="formLayout">
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_7">
-              <property name="text">
-               <string>NAME :</string>
+           <layout class="QVBoxLayout" name="verticalLayout_10">
+            <item>
+             <widget class="QFrame" name="frame_16">
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>130</height>
+               </size>
               </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_11">
+               <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+                <widget class="QFrame" name="frame_17">
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QFrame{
+border-image: url(:/image/vecteezy_male-and-female-symbol-human-profile-icon-or-people-icon_3543440.jpg);}</string>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QFrame" name="frame_18">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>75</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>200</height>
+                  </size>
+                 </property>
+                 <property name="frameShape">
+                  <enum>QFrame::StyledPanel</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Raised</enum>
+                 </property>
+                 <layout class="QFormLayout" name="formLayout">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_6">
+                    <property name="text">
+                     <string>Name :</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QLabel" name="c_name">
+                    <property name="text">
+                     <string>Subash Yadav</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_8">
+                    <property name="text">
+                     <string>ID-Card :</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QLabel" name="c_Id">
+                    <property name="text">
+                     <string>9827882782</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+              </layout>
              </widget>
             </item>
-            <item row="0" column="1">
-             <widget class="QLabel" name="label_10">
-              <property name="text">
-               <string>Subash Chandra Yadav</string>
+            <item>
+             <widget class="QTableWidget" name="pBookTable">
+              <property name="sizeIncrement">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
               </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QLabel" name="label_6">
-              <property name="text">
-               <string>TOTAL BooK :</string>
+              <property name="font">
+               <font>
+                <family>Cantarell</family>
+                <pointsize>10</pointsize>
+                <bold>false</bold>
+               </font>
               </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QLabel" name="label_12">
-              <property name="text">
-               <string>4</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_8">
-              <property name="text">
-               <string>ID-CARD :</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QLabel" name="label_11">
-              <property name="text">
-               <string>CE-2024-58</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="label_9">
-              <property name="text">
-               <string>Book FINE :</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QLabel" name="label_13">
-              <property name="text">
-               <string>200 /-</string>
-              </property>
+              <column>
+               <property name="text">
+                <string>Book ID</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Title</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Author</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>ISBN</string>
+               </property>
+              </column>
              </widget>
             </item>
            </layout>

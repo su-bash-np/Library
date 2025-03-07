@@ -16,9 +16,7 @@ public:
     ~Admin();
 
 private slots:
-    void on_StatuspushButton_clicked();
 
-    void on_SearchpushButton_clicked();
 
     void on_Update_Delete_clicked();
 
@@ -30,8 +28,6 @@ private slots:
 
     void on_addBook_clicked();
 
-    void on_pushButton_6_clicked();
-
     void viewBookList();
 
     void on_SearchPushButton_clicked();
@@ -41,6 +37,11 @@ private slots:
     void on_deLete_clicked();
 
     void on_pushButton_5_clicked();
+
+
+    void on_aExit_clicked();
+
+    void on_AddBook_clicked();
 
 private:
     Ui::Admin *ui;

@@ -52,6 +52,7 @@ else()
             database.cpp
             admin.h admin.cpp admin.ui
             student.h student.cpp student.ui
+            sessionmanager.h sessionmanager.cpp
         )
     endif()
 endif()
